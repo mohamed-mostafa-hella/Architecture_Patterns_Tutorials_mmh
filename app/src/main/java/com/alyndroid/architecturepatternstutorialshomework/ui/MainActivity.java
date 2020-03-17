@@ -3,10 +3,12 @@ package com.alyndroid.architecturepatternstutorialshomework.ui;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.NumberPicker;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.alyndroid.architecturepatternstutorialshomework.Pojo.DataBase;
 import com.alyndroid.architecturepatternstutorialshomework.Pojo.NumberModel;
@@ -31,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     TextView divResultTextView;
 
     NumberPresenter numberPresenter;
-
+    NumberViewModel numberViewModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +46,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //MVP
         numberPresenter = new NumberPresenter(this);
+
+        //MVVM
+        numberViewModel = ViewModelProviders.of(this).get(NumberViewModel.class);
+
+        numberViewModel.devResult.observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                divResultTextView.setText(s);
+            }
+        });
 
     }
 
@@ -67,6 +79,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.mul_button:
                 numberPresenter.mul();
+                break;
+            case R.id.div_button:
+                numberViewModel.dev();
                 break;
         }
     }
